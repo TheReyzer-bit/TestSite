@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Рандомная строка из Google Таблицы</title>
+    <script>
+        async function loadRandomRow() {
+            const url = `https://opensheet.elk.sh/1g818sLdbFQKy1BhP-VFmeWbddc4uryDwWMb_geJOGQw/${encodeURIComponent('Лист1')}`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json(); // 👉 тут парсим как JSON, не как текст
+
+                if (data.length === 0) {
+                    document.getElementById('randomRow').innerText = 'Таблица пустая.';
+                    return;
+                }
+
+                const randomRow = data[Math.floor(Math.random() * data.length)];
+                // 👉 У тебя ключ: "1 строка с текстом"
+                document.getElementById('randomRow').innerText = randomRow['1 строка с текстом'];
+
+            } catch (error) {
+                console.error('Ошибка загрузки данных:', error);
+                document.getElementById('randomRow').innerText = 'Ошибка загрузки данных.';
+            }
+        }
+
+        window.onload = loadRandomRow;
+    </script>
+</head>
+<body style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #f0f0f0; font-family: Arial, sans-serif;">
+    <div style="text-align: center; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <h1 style="font-size: 2rem; margin-bottom: 1rem;">Случайная строка из Google Таблицы</h1>
+        <p id="randomRow" style="font-size: 1.5rem; color: #007bff;"></p>
+        <button onclick="loadRandomRow()" style="margin-top: 1.5rem; padding: 0.5rem 1rem; font-size: 1rem; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px;">Загрузить другую строку</button>
+    </div>
+</body>
+</html>
